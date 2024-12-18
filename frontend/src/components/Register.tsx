@@ -18,13 +18,13 @@ function Register() {
       });
 
       if (response.ok) {
-        setMessage('Registration successful.');
+        setMessage('Sikeres regisztráció.');
         navigate('/login');
       } else {
-        setMessage('Registration failed.');
+        setMessage('Sikertelen regisztráció.');
       }
     } catch (error) {
-      console.error('Error registering user:', error);
+      console.error('Hiba a regisztrációban:', error);
       setMessage('An error occurred.');
     }
   };
@@ -35,7 +35,7 @@ function Register() {
       <div className="mb-3">
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Felhasználónév"
           className="form-control"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -44,7 +44,7 @@ function Register() {
       <div className="mb-3">
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Jelszó"
           className="form-control"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
