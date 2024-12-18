@@ -8,6 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const db = mysql.createPool({
     host: "localhost",
@@ -126,6 +127,41 @@ app.put('/api/profile/password', async (req, res) => {
         res.status(500).json({ message: 'Szerverhiba' });
     }
 });
+
+app.get('/products', async (req, res) => {
+    try {
+      const [products] = await db.query('SELECT * FROM products');
+      res.json(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ error: 'Szerverhiba történt.' });
+    }
+  });
+
+app.get("/products", async (req, res) => {
+    try {
+        const [rows] = await db.query("SELECT * FROM products");
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error retrieving products:', error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+app.get("/products/:id", async (req, res) => {
+    const productId = req.params.id;
+    try {
+        const [rows] = await db.query("SELECT * FROM products WHERE id = ?", [productId]);
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Product not found with id', productId} );
+        }
+        res.status(200).json(rows[0]);
+    } catch (error) {
+        console.error('Error retrieving product with id:', {productId}, {error});
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+  
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
